@@ -43,10 +43,10 @@ export default function Nav() {
         },
         {
             path: '/listf',
-            name: 'Musique',
+            name: 'Bien-être',
             icon: (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25zm.375 0a1.125 1.125 0 11-2.25 0 1.125 1.125 0 012.25 0zM18.75 10.5h.008v.008h-.008V10.5zm.375 0a1.125 1.125 0 11-2.25 0 1.125 1.125 0 012.25 0zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             )
         }
