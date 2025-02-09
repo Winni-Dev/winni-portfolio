@@ -139,6 +139,7 @@ export default function Exo() {
         const newTli = tli.filter((_, i) => i !== index);
         setTli(newTli);
         setCont(prev => prev - 1);
+        setCompletedTasks(prev => prev.filter(i => i !== index));
     }
 
     const modification = (index) => {
