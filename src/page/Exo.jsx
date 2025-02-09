@@ -210,7 +210,7 @@ export default function Exo() {
     };
 
     return (
-        <div className='min-h-screen bg-slate-950 w-full py-8 px-4 sm:px-6 lg:px-8'>
+        <div className='min-h-screen bg-slate-950 w-full py-8 px-4 pl-24 md:pl-0 sm:px-6 lg:px-8'>
             <div className='max-w-2xl mx-auto'>
                 <div className='text-center mb-8'>
                     <h1 className='text-2xl sm:text-3xl font-bold text-white'>
@@ -228,7 +228,7 @@ export default function Exo() {
                 </div>
 
                 <div className='bg-slate-900 rounded-xl p-6 shadow-lg mb-6'>
-                    <div className='flex gap-3'>
+                    <div className='flex flex-col gap-3 md:flex-row'>
                         <input
                             type="text"
                             value={li}

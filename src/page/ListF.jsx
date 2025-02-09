@@ -102,58 +102,88 @@ export default function ListF() {
         setHabits(habits.filter(habit => habit.id !== habitId));
     };
 
-    // Demander la permission pour les notifications
-    const requestNotificationPermission = async () => {
-        try {
-            const permission = await Notification.requestPermission();
-            return permission === 'granted';
-        } catch (error) {
-            console.error('Erreur de permission:', error);
-            return false;
+    // Ajoutez ces fonctions après les déclarations de useState
+    const scheduleNotification = (habit) => {
+        if (!("Notification" in window)) {
+            alert("Ce navigateur ne supporte pas les notifications desktop");
+            return;
         }
+
+        // Programmer la notification pour 9h du matin
+        const now = new Date();
+        const scheduledTime = new Date(now);
+        scheduledTime.setHours(9, 0, 0, 0);
+
+        if (now > scheduledTime) {
+            scheduledTime.setDate(scheduledTime.getDate() + 1);
+        }
+
+        const timeUntilNotification = scheduledTime - now;
+
+        return setTimeout(() => {
+            new Notification(`Rappel : ${habit.name}`, {
+                body: `N'oubliez pas de "${habit.name}" aujourd'hui !`,
+                icon: '/favicon.ico', // Assurez-vous d'avoir une icône
+                badge: '/favicon.ico',
+                tag: `habit-${habit.id}`,
+                requireInteraction: true
+            });
+        }, timeUntilNotification);
     };
 
-    // Fonction modifiée pour gérer les notifications
+    // Remplacez la fonction toggleNotifications existante par celle-ci
     const toggleNotifications = async (habitId) => {
-        const hasPermission = await requestNotificationPermission();
-        
-        if (hasPermission) {
-            setHabits(habits.map(habit => {
-                if (habit.id === habitId) {
-                    const newNotificationState = !habit.notifications;
-                    
-                    if (newNotificationState) {
-                        // Programmer une notification quotidienne
-                        const notification = new Notification('Rappel d\'habitude', {
-                            body: `N'oubliez pas de "${habit.name}" aujourd'hui !`,
-                            icon: '/path/to/icon.png' // Optionnel
-                        });
+        if (!("Notification" in window)) {
+            alert("Ce navigateur ne supporte pas les notifications desktop");
+            return;
+        }
 
-                        // Programmer la notification pour 9h du matin
-                        const now = new Date();
-                        const scheduledTime = new Date(now);
-                        scheduledTime.setHours(9, 0, 0, 0);
+        try {
+            let permission = Notification.permission;
+            
+            if (permission === "default") {
+                permission = await Notification.requestPermission();
+            }
+
+            if (permission === "granted") {
+                setHabits(habits.map(habit => {
+                    if (habit.id === habitId) {
+                        const newNotificationState = !habit.notifications;
                         
-                        if (now > scheduledTime) {
-                            scheduledTime.setDate(scheduledTime.getDate() + 1);
+                        if (newNotificationState) {
+                            // Notification immédiate pour tester
+                            new Notification("Notifications activées", {
+                                body: `Les rappels pour "${habit.name}" ont été activés`,
+                                icon: '/favicon.ico'
+                            });
+
+                            // Programmer les notifications quotidiennes
+                            scheduleNotification(habit);
                         }
 
-                        const timeUntilNotification = scheduledTime - now;
-                        setTimeout(() => {
-                            new Notification('Rappel d\'habitude', {
-                                body: `N'oubliez pas de "${habit.name}" aujourd'hui !`
-                            });
-                        }, timeUntilNotification);
+                        return { ...habit, notifications: newNotificationState };
                     }
-
-                    return { ...habit, notifications: newNotificationState };
-                }
-                return habit;
-            }));
-        } else {
-            alert('Veuillez autoriser les notifications pour utiliser cette fonctionnalité');
+                    return habit;
+                }));
+            } else {
+                alert("Veuillez autoriser les notifications dans les paramètres de votre navigateur");
+            }
+        } catch (error) {
+            console.error('Erreur lors de la gestion des notifications:', error);
+            alert("Une erreur est survenue lors de l'activation des notifications");
         }
     };
+
+    // Ajoutez cet useEffect pour gérer les notifications quotidiennes
+    useEffect(() => {
+        const notificationTimers = habits
+            .filter(habit => habit.notifications)
+            .map(habit => scheduleNotification(habit));
+
+        return () => {
+            notificationTimers.forEach(timer => clearTimeout(timer));
+        };
+    }, [habits]);
 
     // Fonction pour calculer les statistiques
     const calculateStats = (habit) => {
@@ -241,11 +271,11 @@ export default function ListF() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-12"
                 >
-                    <h1 className="text-4xl font-bold mb-4">Suivi des Habitudes</h1>
-                    <p className="text-gray-400 mb-6">Développez de meilleures habitudes, jour après jour</p>
+                    <h1 className="text-2xl md:text-4xl ml-16 md:ml-0 lg:ml-0 font-bold mb-4">Suivi des Habitudes</h1>
+                    <p className="text-gray-400 mb-6 ml-16 md:ml-0 lg:ml-0 md:w-1/2 mx-auto">Développez de meilleures habitudes, jour après jour</p>
                     
                     {/* Guide d'utilisation */}
-                    <div className="bg-slate-900/50 p-4 rounded-lg max-w-2xl mx-auto">
+                    <div className="bg-slate-900/50 p-4 rounded-lg ml-16 md:ml-0 lg:ml-0  mx-auto">
                         <h2 className="text-lg font-semibold mb-2">Comment ça marche ?</h2>
                         <ul className="text-sm text-gray-400 space-y-2 text-left">
                             <li className="flex items-center gap-2">
@@ -278,9 +308,9 @@ export default function ListF() {
                 </motion.div>
 
                 {/* Formulaire d'ajout */}
-                <div className="bg-slate-900 rounded-xl p-6 mb-8 shadow-lg hover:shadow-blue-500/5 transition-all duration-300">
+                <div className="bg-slate-900 rounded-xl p-6 mb-8 ml-16 md:ml-0 lg:ml-0 mx-auto shadow-lg hover:shadow-blue-500/5 transition-all duration-300">
                     <h2 className="text-lg font-semibold mb-4">Ajouter une nouvelle habitude</h2>
-                    <div className="flex gap-4">
+                    <div className="flex flex-col md:flex-row gap-4">
                         <input
                             type="text"
                             value={newHabit}
@@ -308,7 +338,7 @@ export default function ListF() {
                 </div>
 
                 {/* Liste des habitudes avec statistiques */}
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid ml-16 md:ml-0 lg:ml-0 gap-4 grid-cols-1 md:grid-cols-2">
                     <AnimatePresence mode="popLayout">
                         {habits.map(habit => {
                             const stats = calculateStats(habit);
@@ -347,7 +377,7 @@ export default function ListF() {
                                         >
                                             {habit.name}
                                         </h3>
-                                        <div className="flex gap-2">
+                                        <div className="flex  gap-2">
                                             {/* Bouton de validation quotidienne */}
                                             <motion.button
                                                 whileHover={{ scale: 1.1 }}
@@ -399,8 +429,8 @@ export default function ListF() {
                                     </div>
 
                                     {/* Statistiques */}
-                                    <div className="mt-8 space-y-6 relative">
-                                        <div className="flex items-center justify-between">
+                                    <div className="mt-8 space-y-6 relative ">
+                                        <div className="flex gap-4 md:gap-0 items-center justify-between">
                                             <h4 className="text-lg font-semibold 
                                                 bg-gradient-to-r from-blue-400 to-blue-600 
                                                 bg-clip-text text-transparent group-hover:scale-105 
@@ -419,7 +449,7 @@ export default function ListF() {
                                         </div>
 
                                         {/* Cartes de statistiques avec effets de survol améliorés */}
-                                        <div className="grid grid-cols-2 gap-4">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-4 
                                                 border border-white/5 
                                                 hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-500/10
@@ -470,3 +500,8 @@ export default function ListF() {
         </div>
     );
 }
+
+
+
+
+

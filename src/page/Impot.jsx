@@ -115,7 +115,7 @@ export default function Impot() {
     };
 
     return (
-        <div className='min-h-screen bg-slate-950 w-full p-4 sm:p-6 lg:p-8'>
+        <div className='min-h-screen bg-slate-950 w-full pl-24 md:pl-0 p-4 sm:p-6 lg:p-8'>
             <div className='max-w-3xl mx-auto'>
                 <motion.h1 
                     initial={{ opacity: 0, y: -20 }}

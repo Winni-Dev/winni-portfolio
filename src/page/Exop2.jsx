@@ -71,7 +71,7 @@ export default function Exop2() {
   };
 
   return (
-    <div className='min-h-screen bg-slate-950 w-full py-8 px-4 sm:px-6 lg:px-8'>
+    <div className='min-h-screen pl-24 bg-slate-950 w-full py-8 px-4 sm:px-6 lg:px-8'>
       <div className='max-w-4xl mx-auto'>
         <motion.div 
           initial={{ opacity: 0, y: -20 }}

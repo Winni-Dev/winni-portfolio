@@ -49,7 +49,7 @@ export default function Formulair() {
     }
 
     return (
-        <div className='min-h-screen w-full bg-slate-950 flex items-center justify-center p-4'>
+        <div className='min-h-screen pl-24 w-full bg-slate-950 flex items-center justify-center p-4'>
             <div className='w-full max-w-md'>
                 <div className='text-center mb-8'>
                     <h1 className='text-2xl sm:text-3xl font-bold text-white'>
