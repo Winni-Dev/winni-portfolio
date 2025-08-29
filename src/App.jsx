@@ -499,7 +499,7 @@ const Portfolio = () => {
             >
               <p className=' relative ml-3 md:ml-0'>
               <span className=' bg-teal-400 absolute w-3 h-3 -left-5 rounded-ss-full mt-2'></span>
-                Passionné par le développement web depuis plus de 5 ans, je me spécialise dans la création d'expériences utilisateur exceptionnelles.
+                Passionné par le développement web depuis plus de 2 ans, je me spécialise dans la création d'expériences utilisateur exceptionnelles.
               </p>
               <p className=' relative ml-3 md:ml-0'>
               <span className=' bg-teal-400 absolute w-3 h-3 -left-5 rounded-ss-full mt-2'></span>
